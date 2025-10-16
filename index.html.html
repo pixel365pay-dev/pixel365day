@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pixel 365Day - تسجيل بلاغ صيانة</title>
+    <style>
+        :root {
+            --primary: #3498db;
+            --secondary: #2c3e50;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .logo {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .logo span {
+            color: #f1c40f;
+        }
+        
+        .tagline {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .form-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--secondary);
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: var(--primary);
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background 0.3s;
+            text-align: center;
+        }
+        
+        .btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .btn-block {
+            display: block;
+            width: 100%;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+        }
+        
+        .notification {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            text-align: center;
+            display: none;
+        }
+        
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        /* أنماط المرفقات */
+        .file-upload-area {
+            border: 2px dashed #ddd;
+            border-radius: 5px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: border 0.3s;
+            margin-bottom: 10px;
+        }
+        
+        .file-upload-area:hover {
+            border-color: var(--primary);
+        }
+        
+        .file-upload-area i {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        .file-input {
+            display: none;
+        }
+        
+        .file-list {
+            margin-top: 15px;
+        }
+        
+        .file-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #f8f9fa;
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin-bottom: 8px;
+        }
+        
+        .file-name {
+            flex-grow: 1;
+            margin-right: 10px;
+        }
+        
+        .file-remove {
+            background: none;
+            border: none;
+            color: var(--danger);
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+        
+        .file-preview {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .preview-item {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            border-radius: 5px;
+            overflow: hidden;
+            border: 1px solid #ddd;
+        }
+        
+        .preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .preview-remove {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            background-color: rgba(231, 76, 60, 0.8);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+        
+        @media (max-width: 768px) {
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            .file-preview {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">Pixel <span>365Day</span></div>
+            <div class="tagline">مركز الصيانة على مدار السنة</div>
+        </header>
+        
+        <div class="form-container">
+            <div id="notification" class="notification"></div>
+            
+            <form id="reportForm">
+                <div class="form-group">
+                    <label for="clientName">اسم العميل</label>
+                    <input type="text" id="clientName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="address">العنوان</label>
+                    <input type="text" id="address" required>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="phone1">رقم الهاتف</label>
+                        <input type="tel" id="phone1" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone2">رقم هاتف ثاني (اختياري)</label>
+                        <input type="tel" id="phone2">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="brand">نوع/ماركة الشاشة</label>
+                        <input type="text" id="brand" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="model">الموديل</label>
+                        <input type="text" id="model" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="issue">العطل</label>
+                    <textarea id="issue" rows="3" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="notes">ملاحظات</label>
+                    <textarea id="notes" rows="2"></textarea>
+                </div>
+                
+                <!-- خانة المرفقات الجديدة -->
+                <div class="form-group">
+                    <label for="attachments">المرفقات (صور الشاشة)</label>
+                    <div class="file-upload-area" id="fileUploadArea">
+                        <div>📁</div>
+                        <p>انقر لرفع الصور أو اسحبها هنا</p>
+                        <p class="text-muted">يمكنك رفع أكثر من صورة</p>
+                        <input type="file" id="attachments" class="file-input" accept="image/*" multiple>
+                    </div>
+                    <div class="file-list" id="fileList"></div>
+                    <div class="file-preview" id="filePreview"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="availability">أوقات التواجد</label>
+                    <input type="text" id="availability" placeholder="مثال: من 9 صباحاً إلى 5 مساءاً" required>
+                </div>
+                
+                <button type="submit" class="btn btn-block">حفظ البلاغ</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // متغير لتخزين الملفات المرفوعة
+        let uploadedFiles = [];
+        
+        // إعداد مستمعي الأحداث عند تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            // منطقة رفع الملفات
+            const fileUploadArea = document.getElementById('fileUploadArea');
+            const fileInput = document.getElementById('attachments');
+            const fileList = document.getElementById('fileList');
+            const filePreview = document.getElementById('filePreview');
+            
+            // النقر على منطقة الرفع
+            fileUploadArea.addEventListener('click', function() {
+                fileInput.click();
+            });
+            
+            // سحب وإفلات الملفات
+            fileUploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                fileUploadArea.style.borderColor = 'var(--primary)';
+                fileUploadArea.style.backgroundColor = 'rgba(52, 152, 219, 0.1)';
+            });
+            
+            fileUploadArea.addEventListener('dragleave', function() {
+                fileUploadArea.style.borderColor = '#ddd';
+                fileUploadArea.style.backgroundColor = 'transparent';
+            });
+            
+            fileUploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                fileUploadArea.style.borderColor = '#ddd';
+                fileUploadArea.style.backgroundColor = 'transparent';
+                
+                if (e.dataTransfer.files.length > 0) {
+                    handleFiles(e.dataTransfer.files);
+                }
+            });
+            
+            // تغيير الملفات المختارة
+            fileInput.addEventListener('change', function() {
+                if (this.files.length > 0) {
+                    handleFiles(this.files);
+                }
+            });
+            
+            // معالجة الملفات المرفوعة
+            function handleFiles(files) {
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    
+                    // التحقق من أن الملف صورة
+                    if (!file.type.startsWith('image/')) {
+                        alert('يرجى رفع ملفات صور فقط');
+                        continue;
+                    }
+                    
+                    // إضافة الملف إلى المرفقات
+                    uploadedFiles.push(file);
+                    
+                    // عرض الملف في القائمة
+                    displayFileInList(file);
+                    
+                    // عرض معاينة للصورة
+                    displayFilePreview(file);
+                }
+                
+                // إعادة تعيين حقل الرفع للسماح برفع نفس الملف مرة أخرى إذا لزم الأمر
+                fileInput.value = '';
+            }
+            
+            // عرض الملف في القائمة
+            function displayFileInList(file) {
+                const fileItem = document.createElement('div');
+                fileItem.className = 'file-item';
+                fileItem.innerHTML = `
+                    <span class="file-name">${file.name}</span>
+                    <button type="button" class="file-remove" data-file-name="${file.name}">×</button>
+                `;
+                
+                fileList.appendChild(fileItem);
+                
+                // إضافة مستمع حدث لحذف الملف
+                fileItem.querySelector('.file-remove').addEventListener('click', function() {
+                    const fileName = this.getAttribute('data-file-name');
+                    removeFile(fileName);
+                    fileItem.remove();
+                });
+            }
+            
+            // عرض معاينة الصورة
+            function displayFilePreview(file) {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    const previewItem = document.createElement('div');
+                    previewItem.className = 'preview-item';
+                    previewItem.innerHTML = `
+                        <img src="${e.target.result}" alt="معاينة">
+                        <button type="button" class="preview-remove" data-file-name="${file.name}">×</button>
+                    `;
+                    
+                    filePreview.appendChild(previewItem);
+                    
+                    // إضافة مستمع حدث لحذف الملف من المعاينة
+                    previewItem.querySelector('.preview-remove').addEventListener('click', function() {
+                        const fileName = this.getAttribute('data-file-name');
+                        removeFile(fileName);
+                        previewItem.remove();
+                        
+                        // إزالة الملف من القائمة أيضاً
+                        const fileItems = fileList.querySelectorAll('.file-item');
+                        fileItems.forEach(item => {
+                            if (item.querySelector('.file-name').textContent === fileName) {
+                                item.remove();
+                            }
+                        });
+                    });
+                };
+                
+                reader.readAsDataURL(file);
+            }
+            
+            // إزالة ملف من المرفقات
+            function removeFile(fileName) {
+                uploadedFiles = uploadedFiles.filter(file => file.name !== fileName);
+            }
+            
+            // إرسال النموذج
+            document.getElementById('reportForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // جمع البيانات من النموذج
+                const reportData = {
+                    clientName: document.getElementById('clientName').value,
+                    address: document.getElementById('address').value,
+                    phone1: document.getElementById('phone1').value,
+                    phone2: document.getElementById('phone2').value,
+                    brand: document.getElementById('brand').value,
+                    model: document.getElementById('model').value,
+                    issue: document.getElementById('issue').value,
+                    notes: document.getElementById('notes').value,
+                    availability: document.getElementById('availability').value,
+                    timestamp: new Date().toISOString(),
+                    attachments: [] // سيتم تخزين معلومات المرفقات هنا
+                };
+                
+                // إنشاء رقم الحالة (مزيج من رقم الموديل والتاريخ ورقم الهاتف)
+                const date = new Date();
+                const dateStr = `${date.getFullYear()}${(date.getMonth()+1).toString().padStart(2, '0')}${date.getDate().toString().padStart(2, '0')}`;
+                const caseNumber = `${reportData.model.replace(/\s+/g, '')}-${dateStr}-${reportData.phone1.slice(-4)}`;
+                reportData.caseNumber = caseNumber;
+                
+                // تحويل الملفات إلى base64 لتخزينها
+                const processFiles = async () => {
+                    for (const file of uploadedFiles) {
+                        const base64 = await fileToBase64(file);
+                        reportData.attachments.push({
+                            name: file.name,
+                            type: file.type,
+                            data: base64
+                        });
+                    }
+                    
+                    // حفظ البيانات في localStorage (بديل مؤقت لقاعدة البيانات)
+                    let reports = JSON.parse(localStorage.getItem('pixel365day_reports') || '[]');
+                    reports.push(reportData);
+                    localStorage.setItem('pixel365day_reports', JSON.stringify(reports));
+                    
+                    // عرض رسالة النجاح
+                    const notification = document.getElementById('notification');
+                    notification.textContent = `تم حفظ البلاغ بنجاح! رقم الحالة: ${caseNumber}`;
+                    notification.className = 'notification success';
+                    notification.style.display = 'block';
+                    
+                    // إعادة تعيين النموذج
+                    document.getElementById('reportForm').reset();
+                    uploadedFiles = [];
+                    fileList.innerHTML = '';
+                    filePreview.innerHTML = '';
+                    
+                    // إخفاء الرسالة بعد 5 ثواني
+                    setTimeout(() => {
+                        notification.style.display = 'none';
+                    }, 5000);
+                };
+                
+                processFiles();
+            });
+            
+            // تحويل الملف إلى base64
+            function fileToBase64(file) {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.readAsDataURL(file);
+                    reader.onload = () => resolve(reader.result);
+                    reader.onerror = error => reject(error);
+                });
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pixel 365Day - لوحة التحكم</title>
+    <style>
+        :root {
+            --primary: #3498db;
+            --secondary: #2c3e50;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .logo {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .logo span {
+            color: #f1c40f;
+        }
+        
+        .tagline {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: var(--primary);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background 0.3s;
+            text-align: center;
+        }
+        
+        .btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .btn-success {
+            background-color: var(--success);
+        }
+        
+        .btn-success:hover {
+            background-color: #27ae60;
+        }
+        
+        .btn-warning {
+            background-color: var(--warning);
+        }
+        
+        .btn-warning:hover {
+            background-color: #e67e22;
+        }
+        
+        .btn-danger {
+            background-color: var(--danger);
+        }
+        
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+        
+        .btn-info {
+            background-color: #17a2b8;
+        }
+        
+        .btn-info:hover {
+            background-color: #138496;
+        }
+        
+        .status-filters {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .status-btn {
+            background-color: #e0e0e0;
+            color: #333;
+        }
+        
+        .status-btn.active {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .reports-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .report-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        
+        .report-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .report-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .case-number {
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        .status {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .status-new {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .status-waiting {
+            background-color: var(--warning);
+            color: white;
+        }
+        
+        .status-completed {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        .report-details p {
+            margin-bottom: 8px;
+        }
+        
+        .report-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .report-actions .btn {
+            flex: 1;
+            font-size: 0.9rem;
+            padding: 8px 10px;
+            min-width: 120px;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-large {
+            max-width: 90%;
+            width: 90%;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #777;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .checkbox-group input {
+            width: auto;
+        }
+        
+        /* أنماط معرض المرفقات */
+        .attachments-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .attachment-item {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            background-color: #f9f9f9;
+        }
+        
+        .attachment-img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        
+        .attachment-img:hover {
+            transform: scale(1.05);
+        }
+        
+        .attachment-info {
+            padding: 10px;
+            text-align: center;
+        }
+        
+        .attachment-name {
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            word-break: break-all;
+        }
+        
+        .attachment-actions {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .attachment-btn {
+            padding: 5px 10px;
+            font-size: 0.8rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .btn-download {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-view {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        /* نافذة عرض الصورة */
+        .image-modal {
+            background-color: rgba(0, 0, 0, 0.9);
+        }
+        
+        .image-modal-content {
+            background: transparent;
+            border: none;
+            box-shadow: none;
+            max-width: 95%;
+            max-height: 95%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .image-container {
+            max-width: 100%;
+            max-height: 80vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .full-image {
+            max-width: 100%;
+            max-height: 80vh;
+            object-fit: contain;
+        }
+        
+        .image-controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        @media (max-width: 768px) {
+            .controls {
+                flex-direction: column;
+            }
+            
+            .status-filters {
+                justify-content: center;
+            }
+            
+            .reports-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            .report-actions {
+                flex-direction: column;
+            }
+            
+            .attachments-container {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">Pixel <span>365Day</span></div>
+            <div class="tagline">لوحة تحكم إدارة البلاغات</div>
+        </header>
+        
+        <div class="controls">
+            <div class="status-filters">
+                <button class="btn status-btn active" data-status="new">بلاغ جديد</button>
+                <button class="btn status-btn" data-status="waiting">في انتظار قطع الغيار</button>
+                <button class="btn status-btn" data-status="completed">تم الصيانة</button>
+            </div>
+            
+            <button class="btn btn-success" id="refreshBtn">تحديث البيانات</button>
+        </div>
+        
+        <div class="reports-container" id="reportsContainer">
+            <!-- سيتم تعبئة البلاغات هنا ديناميكياً -->
+        </div>
+    </div>
+    
+    <!-- Modal لإضافة قطع الغيار -->
+    <div class="modal" id="partsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>إضافة قطع الغيار</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="partsForm">
+                <input type="hidden" id="editCaseNumber">
+                <div class="form-group">
+                    <label for="partType">نوع القطعة</label>
+                    <input type="text" id="partType" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="partCost">تكلفة القطعة</label>
+                        <input type="number" id="partCost" min="0" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="inspectionCost">تكلفة الكشف</label>
+                        <input type="number" id="inspectionCost" min="0" step="0.01" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="partNotes">ملاحظات إضافية</label>
+                    <textarea id="partNotes" rows="3"></textarea>
+                </div>
+                <div class="form-group checkbox-group">
+                    <input type="checkbox" id="partPaid">
+                    <label for="partPaid">تم تحصيل المبلغ</label>
+                </div>
+                <button type="submit" class="btn btn-warning btn-block">إضافة قطع الغيار</button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Modal لإكمال الصيانة -->
+    <div class="modal" id="completeModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>إكمال الصيانة</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="completeForm">
+                <input type="hidden" id="completeCaseNumber">
+                <div class="form-group">
+                    <label for="totalCost">التكلفة الإجمالية</label>
+                    <input type="number" id="totalCost" min="0" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="finalNotes">ملاحظات نهائية</label>
+                    <textarea id="finalNotes" rows="3"></textarea>
+                </div>
+                <div class="form-group checkbox-group">
+                    <input type="checkbox" id="maintenancePaid">
+                    <label for="maintenancePaid">تم تحصيل المبلغ</label>
+                </div>
+                <button type="submit" class="btn btn-success btn-block">إكمال الصيانة</button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Modal لعرض المرفقات -->
+    <div class="modal" id="attachmentsModal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h3>مرفقات البلاغ</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div id="attachmentsContainer" class="attachments-container">
+                <!-- سيتم تعبئة المرفقات هنا ديناميكياً -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal لعرض الصورة بحجمها الكامل -->
+    <div class="modal image-modal" id="imageModal">
+        <div class="modal-content image-modal-content">
+            <div class="image-container">
+                <img id="fullSizeImage" class="full-image" src="" alt="صورة كاملة">
+            </div>
+            <div class="image-controls">
+                <button id="downloadImage" class="btn btn-download">تنزيل الصورة</button>
+                <button class="btn btn-info close-modal">إغلاق</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // بيانات البلاغات (سيتم جلبها من localStorage أو قاعدة بيانات)
+        let reports = [];
+        
+        // حالة التصفية الحالية - تم تغييرها إلى 'new' بدلاً من 'all'
+        let currentFilter = 'new';
+        
+        // تهيئة الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            loadReports();
+            setupEventListeners();
+        });
+        
+        // تحميل البلاغات من localStorage
+        function loadReports() {
+            const storedReports = localStorage.getItem('pixel365day_reports');
+            if (storedReports) {
+                reports = JSON.parse(storedReports);
+                
+                // إضافة حالة افتراضية إذا لم تكن موجودة
+                reports.forEach(report => {
+                    if (!report.status) report.status = 'new';
+                    if (!report.parts) report.parts = [];
+                    if (!report.cost) report.cost = 0;
+                    if (!report.finalNotes) report.finalNotes = '';
+                    if (!report.inspectionCost) report.inspectionCost = 0;
+                    if (!report.totalCost) report.totalCost = 0;
+                    if (!report.partPaid) report.partPaid = false;
+                    if (!report.maintenancePaid) report.maintenancePaid = false;
+                    if (!report.attachments) report.attachments = [];
+                });
+                
+                displayReports();
+            }
+        }
+        
+        // حفظ البلاغات في localStorage
+        function saveReports() {
+            localStorage.setItem('pixel365day_reports', JSON.stringify(reports));
+        }
+        
+        // إعداد مستمعي الأحداث
+        function setupEventListeners() {
+            // تصفية حسب الحالة
+            document.querySelectorAll('.status-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.status-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    currentFilter = this.getAttribute('data-status');
+                    displayReports();
+                });
+            });
+            
+            // زر تحديث البيانات
+            document.getElementById('refreshBtn').addEventListener('click', function() {
+                loadReports();
+            });
+            
+            // إغلاق النوافذ المنبثقة
+            document.querySelectorAll('.close-modal').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.modal').forEach(modal => {
+                        modal.style.display = 'none';
+                    });
+                });
+            });
+            
+            // إرسال نموذج قطع الغيار
+            document.getElementById('partsForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const caseNumber = document.getElementById('editCaseNumber').value;
+                const partType = document.getElementById('partType').value;
+                const partCost = parseFloat(document.getElementById('partCost').value);
+                const inspectionCost = parseFloat(document.getElementById('inspectionCost').value);
+                const partNotes = document.getElementById('partNotes').value;
+                const partPaid = document.getElementById('partPaid').checked;
+                
+                const report = reports.find(r => r.caseNumber === caseNumber);
+                if (report) {
+                    report.parts.push({
+                        type: partType, 
+                        cost: partCost,
+                        notes: partNotes
+                    });
+                    report.inspectionCost = inspectionCost;
+                    report.partPaid = partPaid;
+                    report.status = 'waiting';
+                    saveReports();
+                    displayReports();
+                    document.getElementById('partsModal').style.display = 'none';
+                    this.reset();
+                }
+            });
+            
+            // إرسال نموذج إكمال الصيانة
+            document.getElementById('completeForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const caseNumber = document.getElementById('completeCaseNumber').value;
+                const totalCost = parseFloat(document.getElementById('totalCost').value);
+                const finalNotes = document.getElementById('finalNotes').value;
+                const maintenancePaid = document.getElementById('maintenancePaid').checked;
+                
+                const report = reports.find(r => r.caseNumber === caseNumber);
+                if (report) {
+                    report.totalCost = totalCost;
+                    report.finalNotes = finalNotes;
+                    report.maintenancePaid = maintenancePaid;
+                    report.status = 'completed';
+                    saveReports();
+                    displayReports();
+                    document.getElementById('completeModal').style.display = 'none';
+                    this.reset();
+                }
+            });
+            
+            // زر تنزيل الصورة
+            document.getElementById('downloadImage').addEventListener('click', function() {
+                const imageSrc = document.getElementById('fullSizeImage').src;
+                const link = document.createElement('a');
+                link.href = imageSrc;
+                link.download = 'صورة_البلاغ_' + new Date().getTime();
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            });
+        }
+        
+        // عرض المرفقات
+        function showAttachments(caseNumber) {
+            const report = reports.find(r => r.caseNumber === caseNumber);
+            if (!report || !report.attachments || report.attachments.length === 0) {
+                alert('لا توجد مرفقات لهذا البلاغ');
+                return;
+            }
+            
+            const container = document.getElementById('attachmentsContainer');
+            container.innerHTML = '';
+            
+            report.attachments.forEach((attachment, index) => {
+                const attachmentItem = document.createElement('div');
+                attachmentItem.className = 'attachment-item';
+                
+                attachmentItem.innerHTML = `
+                    <img src="${attachment.data}" alt="${attachment.name}" class="attachment-img">
+                    <div class="attachment-info">
+                        <div class="attachment-name">${attachment.name}</div>
+                        <div class="attachment-actions">
+                            <button class="attachment-btn btn-view view-attachment" data-index="${index}" data-case="${caseNumber}">عرض</button>
+                            <button class="attachment-btn btn-download download-attachment" data-index="${index}" data-case="${caseNumber}">تنزيل</button>
+                        </div>
+                    </div>
+                `;
+                
+                container.appendChild(attachmentItem);
+            });
+            
+            // إضافة مستمعي الأحداث للأزرار الجديدة
+            document.querySelectorAll('.view-attachment').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const caseNumber = this.getAttribute('data-case');
+                    const index = parseInt(this.getAttribute('data-index'));
+                    showFullImage(caseNumber, index);
+                });
+            });
+            
+            document.querySelectorAll('.download-attachment').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const caseNumber = this.getAttribute('data-case');
+                    const index = parseInt(this.getAttribute('data-index'));
+                    downloadAttachment(caseNumber, index);
+                });
+            });
+            
+            document.getElementById('attachmentsModal').style.display = 'flex';
+        }
+        
+        // عرض الصورة بحجمها الكامل
+        function showFullImage(caseNumber, index) {
+            const report = reports.find(r => r.caseNumber === caseNumber);
+            if (report && report.attachments && report.attachments[index]) {
+                const attachment = report.attachments[index];
+                document.getElementById('fullSizeImage').src = attachment.data;
+                document.getElementById('imageModal').style.display = 'flex';
+                
+                // تحديث زر التنزيل ليتناسب مع الصورة الحالية
+                document.getElementById('downloadImage').setAttribute('data-case', caseNumber);
+                document.getElementById('downloadImage').setAttribute('data-index', index);
+            }
+        }
+        
+        // تنزيل المرفق
+        function downloadAttachment(caseNumber, index) {
+            const report = reports.find(r => r.caseNumber === caseNumber);
+            if (report && report.attachments && report.attachments[index]) {
+                const attachment = report.attachments[index];
+                const link = document.createElement('a');
+                link.href = attachment.data;
+                link.download = attachment.name;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+        }
+        
+        // عرض البلاغات حسب التصفية
+        function displayReports() {
+            const container = document.getElementById('reportsContainer');
+            container.innerHTML = '';
+            
+            // تم تغيير التصفية لتعرض فقط البلاغات حسب الحالة المحددة
+            const filteredReports = reports.filter(report => report.status === currentFilter);
+            
+            if (filteredReports.length === 0) {
+                container.innerHTML = '<p style="text-align: center; grid-column: 1/-1;">لا توجد بلاغات لعرضها</p>';
+                return;
+            }
+            
+            filteredReports.forEach(report => {
+                const card = document.createElement('div');
+                card.className = 'report-card';
+                
+                let statusText = '';
+                let statusClass = '';
+                
+                switch(report.status) {
+                    case 'new':
+                        statusText = 'بلاغ جديد';
+                        statusClass = 'status-new';
+                        break;
+                    case 'waiting':
+                        statusText = 'في انتظار قطع الغيار';
+                        statusClass = 'status-waiting';
+                        break;
+                    case 'completed':
+                        statusText = 'تم الصيانة';
+                        statusClass = 'status-completed';
+                        break;
+                }
+                
+                // حساب التكلفة الإجمالية لقطع الغيار
+                const totalPartsCost = report.parts.reduce((total, part) => total + (part.cost || 0), 0);
+                
+                // التحقق من وجود مرفقات
+                const hasAttachments = report.attachments && report.attachments.length > 0;
+                
+                card.innerHTML = `
+                    <div class="report-header">
+                        <div class="case-number">${report.caseNumber}</div>
+                        <div class="status ${statusClass}">${statusText}</div>
+                    </div>
+                    <div class="report-details">
+                        <p><strong>العميل:</strong> ${report.clientName}</p>
+                        <p><strong>الهاتف:</strong> ${report.phone1}</p>
+                        <p><strong>الماركة:</strong> ${report.brand}</p>
+                        <p><strong>الموديل:</strong> ${report.model}</p>
+                        <p><strong>العطل:</strong> ${report.issue}</p>
+                        ${report.notes ? `<p><strong>ملاحظات:</strong> ${report.notes}</p>` : ''}
+                        <p><strong>أوقات التواجد:</strong> ${report.availability}</p>
+                        <p><strong>التاريخ:</strong> ${new Date(report.timestamp).toLocaleString('ar-EG')}</p>
+                        ${hasAttachments ? `<p><strong>عدد المرفقات:</strong> ${report.attachments.length}</p>` : ''}
+                        ${report.parts.length > 0 ? `
+                            <p><strong>قطع الغيار:</strong> ${report.parts.map(p => p.type).join(', ')}</p>
+                            <p><strong>تكلفة القطع:</strong> ${totalPartsCost} جنيه</p>
+                            <p><strong>تكلفة الكشف:</strong> ${report.inspectionCost || 0} جنيه</p>
+                            <p><strong>حالة القطع:</strong> ${report.partPaid ? 'تم التحصيل' : 'لم يتم التحصيل'}</p>
+                        ` : ''}
+                        ${report.status === 'completed' ? `
+                            <p><strong>التكلفة الإجمالية:</strong> ${report.totalCost || 0} جنيه</p>
+                            <p><strong>حالة الصيانة:</strong> ${report.maintenancePaid ? 'تم التحصيل' : 'لم يتم التحصيل'}</p>
+                            ${report.finalNotes ? `<p><strong>ملاحظات نهائية:</strong> ${report.finalNotes}</p>` : ''}
+                        ` : ''}
+                    </div>
+                    <div class="report-actions">
+                        ${hasAttachments ? `<button class="btn btn-info view-attachments-btn" data-case="${report.caseNumber}">عرض المرفقات</button>` : ''}
+                        ${report.status === 'new' ? `<button class="btn btn-warning add-parts" data-case="${report.caseNumber}">طلب قطع غيار</button>` : ''}
+                        ${report.status === 'waiting' ? `<button class="btn btn-success complete-repair" data-case="${report.caseNumber}">إكمال الصيانة</button>` : ''}
+                        <button class="btn btn-danger delete-report" data-case="${report.caseNumber}">حذف</button>
+                    </div>
+                `;
+                
+                container.appendChild(card);
+            });
+            
+            // إضافة مستمعي الأحداث للأزرار الديناميكية
+            document.querySelectorAll('.add-parts').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const caseNumber = this.getAttribute('data-case');
+                    document.getElementById('editCaseNumber').value = caseNumber;
+                    
+                    // تعبئة البيانات الحالية إذا كانت موجودة
+                    const report = reports.find(r => r.caseNumber === caseNumber);
+                    if (report) {
+                        document.getElementById('inspectionCost').value = report.inspectionCost || '';
+                    }
+                    
+                    document.getElementById('partsModal').style.display = 'flex';
+                });
+            });
+            
+            document.querySelectorAll('.complete-repair').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const caseNumber = this.getAttribute('data-case');
+                    document.getElementById('completeCaseNumber').value = caseNumber;
+                    
+                    // تعبئة البيانات الحالية إذا كانت موجودة
+                    const report = reports.find(r => r.caseNumber === caseNumber);
+                    if (report) {
+                        // حساب التكلفة الإجمالية (قطع الغيار + الكشف)
+                        const totalPartsCost = report.parts.reduce((total, part) => total + (part.cost || 0), 0);
+                        document.getElementById('totalCost').value = totalPartsCost + (report.inspectionCost || 0);
+                    }
+                    
+                    document.getElementById('completeModal').style.display = 'flex';
+                });
+            });
+            
+            document.querySelectorAll('.delete-report').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const caseNumber = this.getAttribute('data-case');
+                    if (confirm('هل أنت متأكد من حذف هذا البلاغ؟')) {
+                        // البحث عن الفهرس الصحيح للبلاغ
+                        const reportIndex = reports.findIndex(r => r.caseNumber === caseNumber);
+                        if (reportIndex !== -1) {
+                            reports.splice(reportIndex, 1);
+                            saveReports();
+                            displayReports();
+                        }
+                    }
+                });
+            });
+            
+            // إضافة مستمعي الأحداث لأزرار عرض المرفقات
+            document.querySelectorAll('.view-attachments-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const caseNumber = this.getAttribute('data-case');
+                    showAttachments(caseNumber);
+                });
+            });
+        }
+    </script>
+</body>
+</html>
